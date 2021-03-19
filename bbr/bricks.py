@@ -2,6 +2,7 @@ import numpy as np
 
 from gg import Sprite
 from gg.utils import load_sprite, load_sprites
+from .ball import Ball
 from .sprites import brick, glass
 
 
@@ -35,15 +36,17 @@ class GlassBrick(Sprite):
         self.alpha = True
 
     def hit(self, ball):
-        if ball.state['thru']:
-            self.deactivate()
-            return
+        if isinstance(ball, Ball):
+            if ball.state['thru']:
+                self.deactivate()
+                return
         self.scene.game.score += 100
         self.state += 1
         # if True:
         # print(ball.vel)
         # print("hi")
-        self.scene.add_powerup(self.pos + [4, 6], ball.vel)
+        if isinstance(ball, Ball):
+            self.scene.add_powerup(self.pos + [4, 6], ball.vel)
         if self.state == 3:
             self.scene.game.score += 100
             self.deactivate()

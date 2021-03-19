@@ -4,7 +4,7 @@ import numpy as np
 
 from gg import ForegroundColor, BackgroundColor
 from gg import Game
-from .level import Level1, Level2
+from .level import Level1, Level2, AlienLevel
 from .splash_screen import SplashScreen
 
 
@@ -13,7 +13,7 @@ class BrickBreaker(Game):
         super(BrickBreaker, self).__init__(*args, **kwargs)
         self.total_lives = 5
         self.lives = 5
-        self.levels = [Level1(self), Level2(self)]
+        self.levels = [Level1(self), Level2(self), AlienLevel(self)]
         self.level_id = 0
         self.level = self.levels[self.level_id]
         self.current_scene = self.level

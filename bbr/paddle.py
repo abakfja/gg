@@ -97,9 +97,8 @@ class Paddle(StatefulMixin, Sprite):
     # def enable_powerup(self):
 
     def update(self, timestamp):
-        print('Paddle grab:', self.state['grabbing'])
-        print('Paddle long:', self.state['length'])
-        print('Paddle shoot:', self.state['shooting'])
+        if self.state['shooting']:
+            print('Paddle shoot:', self.state['shoot_time'] + 100 - timestamp)
         for target in self.scene.iter_balls():
             if (
                     target.bottom >= self.top and
