@@ -23,7 +23,8 @@ class AlienBullet(Bullet):
         self.vel = Vel([1, 0])
 
     def update(self, timestamp):
-        if self.bottom == self.scene.paddle.top:
+        if self.bottom == self.scene.paddle.top and \
+                self.scene.paddle.left <= self.left <= self.scene.paddle.right:
             self.scene.game.lives -= 1
         self.move(self.vel)
 

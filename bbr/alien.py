@@ -27,6 +27,8 @@ class Alien(StatefulMixin, Sprite):
         elif self.state['color'][1] < 100 and self.state['done'] == 1:
             self.scene.add_layer()
             self.state['done'] += 1
+        elif self.state['color'] <= 0:
+            self.deactivate()
         self.update_sprite()
 
     def update(self, timestamp):
@@ -51,5 +53,5 @@ class Alien(StatefulMixin, Sprite):
                     self.hit(target)
                     target.switch_x()
 
-        if timestamp % 10 == 0:
+        if timestamp % 50 == 0:
             self.scene.add_alien_bullet(Pos([self.bottom, self.left + self.width // 2]), Vel([1, 0]))

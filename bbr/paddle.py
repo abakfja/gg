@@ -98,7 +98,7 @@ class Paddle(StatefulMixin, Sprite):
 
     def update(self, timestamp):
         if self.state['shooting']:
-            print('Paddle shoot:', self.state['shoot_time'] + 100 - timestamp)
+            print('Paddle shoot:', (self.state['shoot_time'] + 100 - timestamp) * 0.05)
         for target in self.scene.iter_balls():
             if (
                     target.bottom >= self.top and

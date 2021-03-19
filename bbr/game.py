@@ -11,8 +11,8 @@ from .splash_screen import SplashScreen
 class BrickBreaker(Game):
     def __init__(self, *args, **kwargs):
         super(BrickBreaker, self).__init__(*args, **kwargs)
-        self.total_lives = 5
-        self.lives = 5
+        self.total_lives = 10
+        self.lives = self.total_lives
         self.levels = [Level1(self), Level2(self), AlienLevel(self)]
         self.level_id = 0
         self.level = self.levels[self.level_id]
@@ -99,10 +99,4 @@ class BrickBreaker(Game):
             times[self.frame % 100] = nd - st
             render[self.frame % 100] = res
             self.frame += 1
-        print(np.mean(times))
-        print(np.mean(render[:, 0]))
-        print(np.mean(render[:, 1]))
-        print(np.mean(render[:, 2]))
-        print(np.mean(render[:, 3]))
-
-        self.end()
+        self.fail()

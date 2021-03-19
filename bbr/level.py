@@ -15,7 +15,7 @@ class Level(Scene):
     def __init__(self, game, *args, **kwargs):
         self.game = game
         super(Level, self).__init__(self.game.shape, *args, **kwargs)
-        self.paddle = Paddle(self, pos=Pos([self.bottom, self.left + (self.width // 4) * 2]))
+        self.paddle = Paddle(self, pos=Pos([self.bottom, (self.width // 4) * 2 - 2]))
         self.background = DiscoBg(self, self.game.shape, pos=Pos([0, 0]))
         self.bricks = []
         self.balls = []
@@ -56,16 +56,16 @@ class Level(Scene):
         self.add(bullet)
 
     def add_powerup(self, pos, vel):
-        id = np.random.randint(0, 6)
-        if id == 0:
+        rand = np.random.randint(0, 6)
+        if rand == 0:
             power = LongPaddle(self, pos=pos, vel=vel)
-        elif id == 1:
+        elif rand == 1:
             power = ShortPaddle(self, pos=pos, vel=vel)
-        elif id == 2:
+        elif rand == 2:
             power = ShootPaddle(self, pos=pos, vel=vel)
-        elif id == 3:
+        elif rand == 3:
             power = ThruBall(self, pos=pos, vel=vel)
-        elif id == 4:
+        elif rand == 4:
             power = SpeedBall(self, pos=pos, vel=vel)
         else:
             power = GrabPaddle(self, pos=pos, vel=vel)
@@ -197,7 +197,7 @@ class Level2(Level):
             )
 
     def update(self, timestamp):
-        super(Level1, self).update(timestamp)
+        super(Level2, self).update(timestamp)
         for x in self.iter_bricks():
             if x.bottom >= self.bottom - 2:
                 return 'FAIL'
@@ -209,7 +209,7 @@ class AlienLevel(Level):
     def __init__(self, *args, **kwargs):
         super(AlienLevel, self).__init__(*args, **kwargs)
         # print(self.paddle.pos)
-        self.alien = Alien(self, pos=Pos([1, self.left + (self.width // 4) * 2]))
+        self.alien = Alien(self, pos=Pos([0,(self.width // 4) * 2] - 2))
         self.add(self.alien)
 
     def generate_bricks(self):
@@ -223,7 +223,7 @@ class AlienLevel(Level):
 
     def add_layer(self):
         for x in self.iter_bricks():
-            x.move(Pos(self.width, 0))
+            x.move(Pos([GlassBrick.SHAPE[0], 0]))
         y = self.alien.bottom
         to_add = []
         # First Row
