@@ -14,7 +14,7 @@ class PowerUp(BoxedMovingMixin, Sprite):
         self.fill_foreground((255, 255, 255))
         self.alpha = True
         self.type = typ
-        self.acc = 0.02
+        self.acc = 0.1
 
     def update(self, timestamp):
         self.vel += Vel([self.acc, 0])

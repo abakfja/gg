@@ -1,8 +1,8 @@
 import numpy as np
 
-from bbr.background import Bg
+from bbr.background import DiscoBg
 from bbr.ball import Ball
-from bbr.bricks import GlassBrick, RainbowBrick
+from bbr.bricks import GlassBrick, RainbowBrick, Brick
 from bbr.paddle import Paddle
 from bbr.powerup import PowerUp
 from gg import Scene
@@ -14,7 +14,7 @@ class Level(Scene):
         self.game = game
         super(Level, self).__init__(self.game.shape, *args, **kwargs)
         self.paddle = Paddle(self, pos=Pos([self.bottom, self.left + (self.width // 4) * 2]))
-        self.background = Bg(self, self.game.shape, pos=Pos([0, 0]))
+        self.background = DiscoBg(self, self.game.shape, pos=Pos([0, 0]))
         self.bricks = []
         self.balls = []
         self.powerups = []
@@ -43,7 +43,6 @@ class Level(Scene):
                 yield it
 
     def add_powerup(self, pos, vel):
-        # print(vel)
         power = PowerUp(self, np.random.randint(0, 4), pos=pos, vel=vel)
         self.powerups.append(power)
         self.add(power)
@@ -61,17 +60,17 @@ class Level(Scene):
             )
             self.add(*self.balls)
 
-    def generate_bricks(self):
-        for it in range(7):
-            self.bricks.append(
-                RainbowBrick(self, pos=Pos([2, 4 + it * RainbowBrick.SHAPE[1]]))
-            )
-        for it in range(7):
-            self.bricks.append(
-                GlassBrick(self, pos=Pos(
-                    [2 + 1 * GlassBrick.SHAPE[0], 4 + it * GlassBrick.SHAPE[1]]
-                ))
-            )
+    # def generate_bricks(self):
+    #     for it in range(7):
+    #         self.bricks.append(
+    #             RainbowBrick(self, pos=Pos([2, 4 + it * RainbowBrick.SHAPE[1]]))
+    #         )
+    #     for it in range(7):
+    #         self.bricks.append(
+    #             GlassBrick(self, pos=Pos(
+    #                 [2 + 1 * GlassBrick.SHAPE[0], 4 + it * GlassBrick.SHAPE[1]]
+    #             ))
+    #         )
 
     def receive_input(self, char):
         if char in ['j', 'l']:
@@ -89,3 +88,70 @@ class Level(Scene):
             for it in self.iter_balls():
                 it.on_paddle = False
                 it.set_launch_angle(self.paddle.get_ball_angle(it.x))
+
+
+class Level1(Level):
+    def generate_bricks(self):
+        for it in range(7):
+            self.bricks.append(
+                RainbowBrick(self, pos=Pos([4, 4 + it * RainbowBrick.SHAPE[1]]))
+            )
+        for it in range(7):
+            self.bricks.append(
+                GlassBrick(self, pos=Pos(
+                    [4 + 1 * GlassBrick.SHAPE[0], 4 + it * GlassBrick.SHAPE[1]]
+                ))
+            )
+
+
+class Level2(Level):
+    def generate_bricks(self):
+
+        y = 1
+        # Last Row
+        for it in range(3):
+            self.bricks.append(
+                GlassBrick(self, pos=Pos(
+                    [y, 4 + (2 * it + 1) * GlassBrick.SHAPE[1]]
+                ))
+            )
+
+        for it in range(4):
+            self.bricks.append(
+                RainbowBrick(self, pos=Pos(
+                    [y, 4 + 2 * it * RainbowBrick.SHAPE[1]]
+                ))
+            )
+
+        y += GlassBrick.SHAPE[0]
+
+        # Second Row
+        for it in range(3):
+            self.bricks.append(
+                RainbowBrick(self, pos=Pos(
+                    [y, 4 + (2 * it + 1) * RainbowBrick.SHAPE[1]]
+                ))
+            )
+
+        for it in range(4):
+            self.bricks.append(
+                Brick(self, pos=Pos(
+                    [y, 4 + 2 * it * Brick.SHAPE[1]]
+                ))
+            )
+        y += GlassBrick.SHAPE[0]
+
+        # First Row
+        for it in range(3):
+            self.bricks.append(
+                GlassBrick(self, pos=Pos(
+                    [y, 4 + (2 * it + 1) * GlassBrick.SHAPE[1]]
+                ))
+            )
+
+        for it in range(4):
+            self.bricks.append(
+                RainbowBrick(self, pos=Pos(
+                    [y, 4 + 2 * it * RainbowBrick.SHAPE[1]]
+                ))
+            )

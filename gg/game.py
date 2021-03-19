@@ -13,7 +13,6 @@ class Game(Updatable):
         self.inp = InputHandler()
         self.score = 0
         self.time = 0
-        self.lives = 10
         self.screen = screen
         self.shape = self.screen.shape
 
