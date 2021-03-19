@@ -5,7 +5,6 @@ class Renderable:
     It must have a render method to be called with a screen
     the position onto which it should be rendered
     """
-
     def width(self):
         """
         Every renderable must have a definitive height
@@ -38,5 +37,6 @@ class Renderable:
 
 
 class Updatable:
+
     def update(self, timestamp):
         pass

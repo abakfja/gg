@@ -1,12 +1,18 @@
 import operator
 import sys
+import time
 
 import numpy as np
 
 from .color import BackgroundColor, ForegroundColor
+from .utils import remap
+
+bc = BackgroundColor(0, 0, 0)
+fc = ForegroundColor(255, 255, 255)
 
 
 class Screen:
+
     def __init__(self, shape):
         h, w = shape
         self._shape = shape
@@ -64,6 +70,18 @@ class Screen:
             self._char_buffer.append(
                 (renderable.z, (y, x), renderable.get_char()))
 
+    def iter_bg_buffer(self):
+        for i in self._bg_buffer:
+            yield i
+
+    def iter_fg_buffer(self):
+        for i in self._fg_buffer:
+            yield i
+
+    def iter_char_buffer(self):
+        for i in self._char_buffer:
+            yield i
+
     def update(self):
         self._bg_buffer_update()
         self._fg_buffer_update()
@@ -71,65 +89,80 @@ class Screen:
 
     def _char_buffer_update(self):
         self._char_buffer.sort(key=operator.itemgetter(0))
-        for val in self._char_buffer:
-            y, x = round(val[1][0]), round(val[1][1])
-            x = (x // 2) * 2
+        for val in self.iter_char_buffer():
+            y, x = remap(val[1])
             height, width = val[2].shape
-            if (not 0 <= y <= self.height) or (not 0 <= y + height <= self.height):
+            if not 0 <= y <= self.height:
                 continue
-            if (not 0 <= x <= self.width) or (not 0 <= x + width <= self.width):
+            if not 0 <= x <= self.width:
                 continue
-            self._char[y:y + height, x:  x + width] = val[2]
+            self._char[y:min(self.height, y + height), x: min(self.width, x + width)] = val[2][:min(
+                self.height - y, height), :min(self.width - x, width)]
 
     def _fg_buffer_update(self):
         self._fg_buffer.sort(key=operator.itemgetter(0))
-        for val in self._fg_buffer:
-            y, x = round(val[1][0]), round(val[1][1])
-            x = (x // 2) * 2
+        for val in self.iter_fg_buffer():
+            y, x = remap(val[1])
             height, width = val[2].shape[:2]
-            if (not 0 <= y <= self.height) or (not 0 <= y + height <= self.height):
+            if not 0 <= y <= self.height:
                 continue
-            if (not 0 <= x <= self.width) or (not 0 <= x + width <= self.width):
+            if not 0 <= x <= self.width:
                 continue
-            self._front[y:y + height, x:  x + width] = val[2]
+            self._front[y:min(self.height, y + height), x: min(self.width, x + width)] = val[2][:min(
+                self.height - y, height), :min(self.width - x, width)]
 
     def _bg_buffer_update(self):
         self._bg_buffer.sort(key=operator.itemgetter(0))
-        for val in self._bg_buffer:
-            y, x = round(val[1][0]), round(val[1][1])
-            x = (x // 2) * 2
+        for val in self.iter_bg_buffer():
+            y, x = remap(val[1])
             height, width = val[2].shape[:2]
-            if (not 0 <= y <= self.height) or (not 0 <= y + height <= self.height):
+            if not 0 <= y <= self.height:
                 continue
-            if (not 0 <= x <= self.width) or (not 0 <= x + width <= self.width):
+            if not 0 <= x <= self.width:
                 continue
-            self._back[y:y + height, x:  x + width] = val[2]
+            self._back[y:min(self.height, y + height), x: min(self.width, x + width)] = val[2][:min(
+                self.height - y, height), :min(self.width - x, width)]
 
-    def string(self):
-        bc = BackgroundColor(0, 0, 0)
-        fc = ForegroundColor(255, 255, 255)
-        list_of_str = []
-        for i in range(self.height):
-            list_of_str.append(
-                ''.join([
-                    bc.generate(self._back[i, j]) + fc.generate(self._front[i, j]) +
-                    self._char[i, j] for j in range(self.width)
-                ])
-            )
-            bc.generate((0, 0, 0))
-            fc.generate((0, 0, 0))
-        list_of_str = '\u001b[0m\n'.join(list_of_str)
-        return list_of_str
+    # def string(self):
+    #     bc = BackgroundColor(0, 0, 0)
+    #     fc = ForegroundColor(255, 255, 255)
+    #     list_of_str = []
+    #     for i in range(self.height):
+    #         list_of_str.append(
+    #             ''.join([
+    #                 bc.generate(self._back[i, j]) + fc.generate(self._front[i, j]) +
+    #                 self._char[i, j] for j in range(self.width)
+    #             ])
+    #         )
+    #         bc.generate((0, 0, 0))
+    #         fc.generate((0, 0, 0))
+    #     list_of_str = '\u001b[0m\n'.join(list_of_str)
+    #     return list_of_str
 
     def _clear_buffers(self):
-        self._bg_buffer.clear()
-        self._fg_buffer.clear()
-        self._char_buffer.clear()
+        self._bg_buffer = []
+        self._fg_buffer = []
+        self._char_buffer = []
 
     def display(self):
-        self.update()
-        s = self.string()
-        sys.stdout.write(s)
-        del s
+        a = time.perf_counter()
+        self._bg_buffer_update()
+        self._fg_buffer_update()
+        self._char_buffer_update()
+        b = time.perf_counter()
+
+        list_of_str = [''.join([
+            bc.generate(self._back[i, j]) +
+            fc.generate(self._front[i, j]) +
+            self._char[i, j] for j in range(self.width)])
+            for i in range(self.height)]
+
+        c = time.perf_counter()
+        list_of_str = '\u001b[0m\n'.join(list_of_str)
+        sys.stdout.write(list_of_str)
+        del list_of_str
         sys.stdout.write("\033[0;0H")
+        d = time.perf_counter()
         self._clear_buffers()
+        e = time.perf_counter()
+        return b - a, c - b, d - c, e - d

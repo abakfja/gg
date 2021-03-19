@@ -12,24 +12,14 @@ class Color:
         else:
             raise ValueError('r, g, b values out of range')
 
-    def __str__(self):
-        return u"2;" + str(self.r) + ";" + str(self.g) + ";" + str(self.b)
-
-    @property
-    def s(self):
-        return self.__str__()
-
     def generate(self, tp):
-        if self.eq(tp):
-            return u""
+        # if self.r == tp[0] and self.g == tp[1] and self.b == tp[2]:
+        #     return u""
         self.r, self.g, self.b = tp
-        return self.s
+        return self.__str__()
 
     def to_tuple(self):
         return self.r, self.g, self.b
-
-    def eq(self, tp):
-        return self.r == tp[0] and self.g == tp[1] and self.b == tp[2]
 
     def __eq__(self, other):
         return self.r == other.r and self.g == other.g and self.b == other.b
@@ -37,9 +27,9 @@ class Color:
 
 class ForegroundColor(Color):
     def __str__(self):
-        return u"\u001b[38;" + super(ForegroundColor, self).__str__() + u"m"
+        return u"\u001b[38;2;{};{};{}m".format(self.r, self.g, self.b)
 
 
 class BackgroundColor(Color):
     def __str__(self):
-        return u"\u001b[48;" + super(BackgroundColor, self).__str__() + u"m"
+        return u"\u001b[48;2;{};{};{}m".format(self.r, self.g, self.b)

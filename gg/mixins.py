@@ -9,8 +9,9 @@ class MovingMixin:
     velocity is first down and then left
     """
 
-    def __init__(self, **kwargs):
-        self.vel = kwargs.get('vel', np.zeros(2, 'i4'))
+    def __init__(self, *args, **kwargs):
+        super(MovingMixin, self).__init__(*args, **kwargs)
+        self.vel = kwargs.get('vel', np.zeros(2))
 
     @property
     def vx(self):
@@ -26,5 +27,3 @@ class MovingMixin:
     def add_vel(self, vel):
         self.vel += vel
 
-    def dir(self):
-        return np.array()

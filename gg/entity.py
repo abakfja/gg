@@ -12,8 +12,8 @@ class Entity(Renderable, Updatable):
     An entity must have a bounding box
     """
 
-    def __init__(self, scene, **kwargs):
-        super(Entity, self).__init__(**kwargs)
+    def __init__(self, scene, *args, **kwargs):
+        super(Entity, self).__init__()
         self.scene = scene
         self._active = True
 
@@ -45,3 +45,12 @@ class Entity(Renderable, Updatable):
 
     def is_active(self):
         return self._active
+
+
+class StatefulMixin:
+    def __init__(self, *args, **kwargs):
+        self.state = kwargs.get('state', {})
+        super(StatefulMixin, self).__init__(*args, **kwargs)
+
+    def update_state(self, state):
+        self.state.update(state)

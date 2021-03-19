@@ -4,7 +4,7 @@ from gg import Surface
 
 
 class Bg(Surface):
-    def __init__(self, shape, scene, pos, *args, **kwargs):
+    def __init__(self, scene, shape, pos, *args, **kwargs):
         super(Bg, self).__init__(shape, scene, *args, **kwargs)
         self.pos = pos
         self.z = -1

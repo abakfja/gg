@@ -1,5 +1,6 @@
 from .interfaces import Renderable, Updatable
 from .mixins import MovingMixin
+from .utils import remap, Pos
 
 
 class Scene(Renderable, Updatable):
@@ -15,6 +16,7 @@ class Scene(Renderable, Updatable):
         self._shape = shape
         self._fixed_entities = []
         self._moving_entities = []
+        self.pos = kwargs.get('pos', Pos([0, 0]))
 
     @property
     def width(self):
@@ -25,12 +27,40 @@ class Scene(Renderable, Updatable):
         return self._shape[0]
 
     @property
-    def shape(self):
-        return self._shape
+    def top(self):
+        assert hasattr(self, 'pos'), (
+            'The position of the object must be defined'
+        )
+        y, x = remap(self.pos)
+        return 0
 
     @property
-    def top(self):
-        return 0
+    def bottom(self):
+        assert hasattr(self, 'pos'), (
+            'The position of the object must be defined'
+        )
+        assert hasattr(self, 'height'), (
+            'A Renderable must have a width defined'
+        )
+        return self.top + self.height
+
+    @property
+    def left(self):
+        assert hasattr(self, 'pos'), (
+            'The position of the object must be defined'
+        )
+        y, x = remap(self.pos)
+        return x
+
+    @property
+    def right(self):
+        assert hasattr(self, 'pos'), (
+            'The position of the object must be defined'
+        )
+        assert hasattr(self, 'width'), (
+            'A Renderable must have a width defined'
+        )
+        return self.left + self.width
 
     @property
     def bottom(self):
@@ -38,17 +68,6 @@ class Scene(Renderable, Updatable):
             'A Renderable must have a width defined'
         )
         return self.height - 1
-
-    @property
-    def left(self):
-        return 0
-
-    @property
-    def right(self):
-        assert hasattr(self, 'width'), (
-            'A Renderable must have a width defined'
-        )
-        return self.width - 1
 
     def add(self, *entities):
         """

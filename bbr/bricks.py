@@ -1,7 +1,8 @@
-from gg import Sprite
-from . import load_sprite, load_sprites
-from .sprites import brick, glass
 import numpy as np
+from gg import Sprite
+from gg.utils import load_sprite, load_sprites
+from .sprites import brick, glass
+from gg.utils import Vel
 
 class Brick(Sprite):
     sprite = load_sprite(brick)
@@ -38,8 +39,10 @@ class GlassBrick(Sprite):
             return
         self.scene.game.score += 100
         self.state += 1
-        if True:
-            self.scene.add_powerup(self.pos + [4, 6])
+        # if True:
+        # print(ball.vel)
+        # print("hi")
+        self.scene.add_powerup(self.pos + [4,6], -ball.vel)
         if self.state == 3:
             self.scene.game.score += 100
             self.deactivate()
