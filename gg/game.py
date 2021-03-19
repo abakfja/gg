@@ -19,4 +19,5 @@ class Game(Updatable):
     @staticmethod
     def end():
         sys.stdout.write(u"\u001b[0m\x1b[?25h")
+        exit(0)
 

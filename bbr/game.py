@@ -35,6 +35,8 @@ class BrickBreaker(Game):
 
     def next_level(self):
         self.level_id += 1
+        if self.level_id == len(self.levels):
+            self.passed()
         self.level = self.levels[self.level_id]
         self.lives = self.total_lives
         self.current_scene = self.level
@@ -44,6 +46,28 @@ class BrickBreaker(Game):
         print('Score:', self.score)
         print('Time: {:.1f}s'.format(self.frame * 0.1))
         print('Lives:', self.lives_repr())
+
+    def passed(self):
+        self.screen.clear()
+        for i in range(30):
+            if i > 0:
+                self.print_stats()
+            tr = SplashScreen(self, f"""\nYou won, gg\n""")
+            self.update(i)
+            tr.render(self.screen)
+            res = self.screen.display()
+        self.end()
+
+    def fail(self):
+        self.screen.clear()
+        for i in range(30):
+            if i > 0:
+                self.print_stats()
+            tr = SplashScreen(self, f"""\nYou lost, git gud\n""")
+            self.update(i)
+            tr.render(self.screen)
+            res = self.screen.display()
+        self.end()
 
     def exec_(self):
         times = np.zeros(100)
@@ -60,7 +84,13 @@ class BrickBreaker(Game):
                     continue
                 self.current_scene.receive_input(c)
                 self.inp.clear()
-            self.current_scene.update(self.frame)
+            res = self.current_scene.update(self.frame)
+            if res == 'FAIL':
+                self.fail()
+            elif res == 'PASS':
+                self.next_level()
+                self.show_transition()
+                continue
             self.current_scene.render(self.screen)
             nd = perf_counter()
             res = self.screen.display()

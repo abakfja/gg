@@ -4,7 +4,7 @@ from bbr.background import DiscoBg
 from bbr.ball import Ball
 from bbr.bricks import GlassBrick, RainbowBrick, Brick
 from bbr.paddle import Paddle
-from bbr.powerup import PowerUp
+from bbr.powerup import LongPaddle, ShortPaddle, ShootPaddle, GrabPaddle, SpeedBall, ThruBall
 from gg import Scene
 from gg.utils import Pos, Vel
 
@@ -43,7 +43,19 @@ class Level(Scene):
                 yield it
 
     def add_powerup(self, pos, vel):
-        power = PowerUp(self, np.random.randint(0, 4), pos=pos, vel=vel)
+        id = np.random.randint(0, 6)
+        if id == 0:
+            power = LongPaddle(self, pos=pos, vel=vel)
+        elif id == 1:
+            power = ShortPaddle(self, pos=pos, vel=vel)
+        elif id == 2:
+            power = ShootPaddle(self, pos=pos, vel=vel)
+        elif id == 3:
+            power = ThruBall(self, pos=pos, vel=vel)
+        elif id == 4:
+            power = SpeedBall(self, pos=pos, vel=vel)
+        else:
+            power = GrabPaddle(self, pos=pos, vel=vel)
         self.powerups.append(power)
         self.add(power)
 
@@ -52,6 +64,13 @@ class Level(Scene):
         self.balls = [x for x in self.iter_balls()]
         self.bricks = [x for x in self.iter_bricks()]
         self.powerups = [x for x in self.iter_powerups()]
+        if timestamp > 200 and timestamp % 50 == 0:
+            for x in self.iter_bricks():
+                x.move(Pos([1, 0]))
+                if x.bottom == self.bottom - 2:
+                    return 'FAIL'
+        if len(self.bricks) == 0:
+            return 'PASS'
         if len(self.balls) == 0:
             self.game.lives -= 1
             ball_pos = self.paddle.pos + [-1, np.random.randint(0, self.paddle.width // 2) * 2]
@@ -59,6 +78,7 @@ class Level(Scene):
                 Ball(self, pos=ball_pos, vel=Vel([0, 0]))
             )
             self.add(*self.balls)
+        return 'OK'
 
     # def generate_bricks(self):
     #     for it in range(7):
@@ -74,7 +94,7 @@ class Level(Scene):
 
     def receive_input(self, char):
         if char in ['j', 'l']:
-            direction = -3 if char == 'j' else 3
+            direction = -4 if char == 'j' else 4
             # print(direction)
             direction = min(self.right - self.paddle.right, direction)
             # print(direction)

@@ -1,6 +1,7 @@
 from gg import Sprite
 from gg import StatefulMixin
 from gg.utils import load_sprites, collides
+from .powerup import PaddlePowerUp, BallPowerUp
 from .sprites import paddle
 
 
@@ -16,14 +17,16 @@ class Paddle(StatefulMixin, Sprite):
     def __init__(self, scene, *args, **kwargs):
         state = {
             'length': 0,
+            'length_time': 0,
             'grabbing': False,
-            'last_powerup': None,
+            'grab_time': 0,
+            'shooting': False,
+            'shoot_time': 0,
             'color': 0
         }
         kwargs['state'] = state
         super(Paddle, self).__init__(self.sprites[state['length']], scene, *args, **kwargs)
-        self.fill_foreground((255, 0, 0))
-        self._powerup_timer = 0
+        self.fill_foreground(self.COLORS[self.state['color']])
 
     def get_ball_angle(self, x):
         x = round(x)
@@ -51,58 +54,80 @@ class Paddle(StatefulMixin, Sprite):
         self.fill_foreground(self.COLORS[self.state['color']])
         self.blit(self.sprites[self.state['length']])
 
-    def update_color(self):
-        self.fill_foreground(self.COLORS[self.state['color']])
-
-    def elongate(self):
-        self.update_state({'length': 1})
+    def reset(self, timestamp):
+        self.update_state({
+            'length': 0,
+            'length_time': timestamp,
+            'grabbing': False,
+            'grab_time': timestamp,
+            'shooting': False,
+            'shoot_time': timestamp,
+            'color': 0
+        })
         self.update_sprite()
 
-    def reset(self):
-        self.update_state({'length': 0})
+    def set_long(self, timestamp):
+        self.update_state({'length': 2, 'length_time': timestamp})
         self.update_sprite()
 
-    def reduce(self):
-        self.update_state({'length': 1})
+    def set_short(self, timestamp):
+        self.update_state({'length': 1, 'length_time': timestamp})
         self.update_sprite()
 
-    def grab(self):
-        self.update_state({'grabbing': True})
+    def set_grab(self, timestamp):
+        self.update_state({'grabbing': True, 'color': 1, 'grab_time': timestamp})
+        self.update_sprite()
+
+    def set_shoot(self, timestamp):
+        self.update_state({'shooting': True, 'color': 2, 'shoot_time': timestamp})
+        self.update_sprite()
+
+    def reset_length(self, timestamp):
+        self.update_state({'length': 0, 'length_time': timestamp})
+        self.update_sprite()
+
+    def reset_grab(self, timestamp):
+        self.update_state({'grabbing': False, 'color': 0, 'grab_time': timestamp})
+        self.update_sprite()
+
+    def reset_shoot(self, timestamp):
+        self.update_state({'shooting': False, 'color': 0, 'shoot_time': timestamp})
+        self.update_sprite()
 
     # def enable_powerup(self):
 
     def update(self, timestamp):
+        print('Paddle grab:', self.state['grabbing'])
+        print('Paddle long:', self.state['length'])
+        print('Paddle shoot:', self.state['shooting'])
         for target in self.scene.iter_balls():
             if (
                     target.bottom >= self.top and
                     target.vy > 0 and
-                    target.left >= self.left - 1 and
-                    target.right <= self.right + 1
+                    self.left - 1 <= target.left <= self.right + 1
             ) or (collides(target, self)):
                 if not self.state['grabbing']:
-                    # print("collide")
                     target.set_launch_angle(self.get_ball_angle(target.left))
                 else:
                     target.on_paddle = True
-        #
-        # for target in self.scene.iter_powerups():
-        #     if target.top == self.top - 1 and target.vy > 0:
-        #         if target.left >= self.left and target.right <= self.right:
-        #             typ = target.type
-        #             if typ == 0:
-        #                 self._powerup_timer = timestamp
-        #                 self.elongate()
-        #             elif typ == 1:
-        #                 self._powerup_timer = timestamp
-        #                 self.reduce()
-        #             elif typ == 2:
-        #                 self._powerup_timer = timestamp
-        #                 self.grab()
-        #
-        #             elif type == 3:
-        #                 for ball in self.scene.iter_balls:
-        #                     ball.random_velocity()
-        #                     ball.thruball(timestamp)
-        #             target.deactivate()
-        if timestamp - self._powerup_timer > 1000:
-            self.reset()
+                    target.pos[0] = self.top - 1
+
+        for target in self.scene.iter_powerups():
+            if (
+                    self.top <= target.bottom <= self.bottom and
+                    target.vy > 0 and
+                    self.left - 1 <= target.left <= self.right + 1
+            ) or (collides(target, self)):
+                if isinstance(target, PaddlePowerUp):
+                    target.mutate(self, timestamp)
+                if isinstance(target, BallPowerUp):
+                    for ball in self.scene.iter_balls():
+                        target.mutate(ball, timestamp)
+                target.deactivate()
+
+        if self.state['grabbing'] and timestamp - self.state['grab_time'] > 100:
+            self.reset_grab(timestamp)
+        if self.state['shooting'] and timestamp - self.state['shoot_time'] > 100:
+            self.reset_shoot(timestamp)
+        if self.state['length'] and timestamp - self.state['length_time'] > 100:
+            self.reset_length(timestamp)
