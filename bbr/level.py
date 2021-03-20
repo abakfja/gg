@@ -209,7 +209,7 @@ class AlienLevel(Level):
     def __init__(self, *args, **kwargs):
         super(AlienLevel, self).__init__(*args, **kwargs)
         # print(self.paddle.pos)
-        self.alien = Alien(self, pos=Pos([0,(self.width // 4) * 2] - 2))
+        self.alien = Alien(self, pos=Pos([0,(self.width // 4) * 2 - 2]))
         self.add(self.alien)
 
     def generate_bricks(self):
