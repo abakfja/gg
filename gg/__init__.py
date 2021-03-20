@@ -1,4 +1,4 @@
-from gg.screen import Screen
+from gg.screen import *
 from gg.color import *
 from gg.entity import *
 from gg.mixins import *
@@ -7,3 +7,4 @@ from gg.scene import *
 from gg.surface import *
 from gg.sprite import *
 from gg.game import *
+from gg.utils import *
