@@ -7,6 +7,9 @@ class Scene(Renderable, Updatable):
     """
     A scene is both renderabe and updatable
     you can have multiple scenes at the same time
+    an example of this can be a game scene and a HUD or score scene
+    The shape of a scene also does not change once defined
+
     A scene as a definitive shape width height
     A scene can also be updated
     """
@@ -61,13 +64,6 @@ class Scene(Renderable, Updatable):
             'A Renderable must have a width defined'
         )
         return self.left + self.width
-
-    @property
-    def bottom(self):
-        assert hasattr(self, 'height'), (
-            'A Renderable must have a width defined'
-        )
-        return self.height - 1
 
     def add(self, *entities):
         """
