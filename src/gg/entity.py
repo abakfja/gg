@@ -13,7 +13,6 @@ class Entity(Renderable, Updatable):
     """
 
     def __init__(self, scene, *args, **kwargs):
-        super(Entity, self).__init__()
         self.scene = scene
         self._active = True
 
@@ -37,20 +36,7 @@ class Entity(Renderable, Updatable):
     def deactivate(self):
         self._active = False
 
-    def move(self, dpos):
-        assert hasattr(self, 'pos'), (
-            'The position of the object must be defined'
-        )
-        self.pos += dpos
-
     def is_active(self):
         return self._active
 
 
-class StatefulMixin:
-    def __init__(self, *args, **kwargs):
-        self.state = kwargs.get('state', {})
-        super(StatefulMixin, self).__init__(*args, **kwargs)
-
-    def update_state(self, state):
-        self.state.update(state)

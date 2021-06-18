@@ -4,10 +4,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="gg-abakfja", # Replace with your own username
-    version="0.0.1",
+    name="gg-abakfja", 
+    version="0.0.2",
     author="Kannav Mehta",
-    author_email="kannav.mehta@students.iiit.ac.in",
+    author_email="kmkannavkmehta@gmail.com",
     description="A framework for creating terminal based games in python",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -20,7 +20,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "gg"},
-    packages=setuptools.find_packages(where="gg"),
-    python_requires=">=3.6",
+    package_dir={"": "src"},
+    packages=setuptools.find_packages(where="src"),
+    python_requires=">=3.8",
 )
