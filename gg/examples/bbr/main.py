@@ -5,6 +5,9 @@ W = 110
 H = 50
 SZ = (H, W)
 
-if __name__ == '__main__':
+def start():
     game = BrickBreaker(Screen(SZ))
     game.exec_()
+
+if __name__ == '__main__':
+    start()

@@ -21,7 +21,7 @@ class Renderable:
 
     def shape(self):
         """
-        Every renderable must have a definitve shape
+        Every renderable must have a definitive shape
         :return: np.array of shape
         """
         pass

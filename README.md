@@ -1,9 +1,5 @@
 # gg
 
-This is a framework for creating terminal based games in python
+This is a framework for creating terminal based games in python. Complete with an example for a brick-breaker game.
 
-Know limitations:
- - [ ] Character width has to be predefined
- - [ ] Multiple scenes at different positions not supported
- - [ ] Renderer too slow
- - [ ] 1 y coordinate worth 2 of x
+![class diagram](./assets/bbr.png)
