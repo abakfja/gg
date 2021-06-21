@@ -1,9 +1,9 @@
 import math
 
 import numpy as np
-
 from gg import Sprite, MovingMixin, StatefulMixin
 from gg.utils import collides, load_sprites
+
 from .sprites import ball
 
 

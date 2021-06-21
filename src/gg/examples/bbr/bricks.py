@@ -1,7 +1,7 @@
 import numpy as np
-
 from gg import Sprite
 from gg.utils import load_sprite, load_sprites
+
 from .ball import Ball
 from .sprites import brick, glass
 

@@ -6,7 +6,7 @@ from gg import Screen
 from gg import Updatable
 
 
-class Game(StateMachine, Updatable):
+class Game(Updatable):
     def __init__(self, screen: Screen):
         os.system('clear')
         sys.stdout.write(u"\x1b[?25l")
@@ -20,4 +20,3 @@ class Game(StateMachine, Updatable):
     def end():
         sys.stdout.write(u"\u001b[0m\x1b[?25h")
         exit(0)
-

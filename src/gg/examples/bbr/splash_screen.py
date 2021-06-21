@@ -1,5 +1,6 @@
 from gg import Scene, Sprite, Pos
 from gg.utils import load_sprite
+
 from .background import PlainBg
 
 

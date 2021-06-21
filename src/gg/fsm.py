@@ -10,4 +10,3 @@ class StatefulMixin:
 class StateMachine:
     def __init__(self, *args, **kwargs):
         self.state = kwargs.get('state', {})
-        

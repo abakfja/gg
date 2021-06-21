@@ -13,7 +13,7 @@ class Surface(Entity):
     and it also has a position in three dimensions
     """
 
-    def __init__(self,  scene: Scene, shape: tuple, *args, **kwargs):
+    def __init__(self, scene: Scene, shape: tuple, *args, **kwargs):
         super(Surface, self).__init__(scene, *args, **kwargs)
         h, w = shape
         # You cannot edit the shape of the object because a lot of things depend on it
@@ -26,7 +26,7 @@ class Surface(Entity):
         # And a white foreground
         self._front = np.full((h, w, 3), np.array([255, 255, 255]), dtype='i2')
         self.z = 0.0  # You can edit this z Later
-        self.alpha = False # by default on object would not be transparent
+        self.alpha = False  # by default on object would not be transparent
 
     def resize(self, shape):
         """
@@ -45,8 +45,8 @@ class Surface(Entity):
             'Cannot blit outside of screen'
         )
         self._char[
-            pos[0]: min(pos[0] + h, self.height),
-            pos[1]:min(pos[1] + w, self.width)
+        pos[0]: min(pos[0] + h, self.height),
+        pos[1]:min(pos[1] + w, self.width)
         ] = chars
 
     def _blit_bg(self, color, pos=np.zeros(2, dtype='i4')):
@@ -55,8 +55,8 @@ class Surface(Entity):
             'Cannot blit outside of screen'
         )
         self._back[
-            pos[0]: min(pos[0] + h, self.height),
-            pos[1]:min(pos[1] + w, self.width)
+        pos[0]: min(pos[0] + h, self.height),
+        pos[1]:min(pos[1] + w, self.width)
         ] = color
 
     def _blit_fg(self, color, pos=np.zeros(2, dtype='i4')):
@@ -65,8 +65,8 @@ class Surface(Entity):
             'Cannot blit outside of screen'
         )
         self._front[
-            pos[0]: min(pos[0] + h, self.height),
-            pos[1]:min(pos[1] + w, self.width)
+        pos[0]: min(pos[0] + h, self.height),
+        pos[1]:min(pos[1] + w, self.width)
         ] = color
 
     def blit(self, chars=None, fore=None, back=None, pos=np.zeros(2, dtype='i4')):
@@ -107,7 +107,6 @@ class Surface(Entity):
         )
         self._back = np.tile(np.array(color), (
             self.height, self.width, 1))
-        self
 
     def fill_foreground(self, color: tuple):
         """
@@ -117,7 +116,6 @@ class Surface(Entity):
         """
         self._front = np.tile(np.array(color), (
             self.height, self.width, 1))
-        self
 
     def clear(self):
         self._front.fill(0)

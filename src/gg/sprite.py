@@ -8,5 +8,5 @@ class Sprite(Surface):
     """
 
     def __init__(self, scene: Scene, chars, *args, **kwargs):
-        super(Sprite, self).__init__(scene, chars.shape,  *args, **kwargs)
+        super(Sprite, self).__init__(scene, chars.shape, *args, **kwargs)
         self.blit(chars)

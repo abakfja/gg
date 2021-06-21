@@ -1,14 +1,14 @@
 import numpy as np
-
-from bbr.alien import Alien
-from bbr.background import DiscoBg
-from bbr.ball import Ball
-from bbr.bricks import GlassBrick, RainbowBrick, Brick
-from bbr.bullet import PaddleBullet, AlienBullet
-from bbr.paddle import Paddle
-from bbr.powerup import LongPaddle, ShortPaddle, ShootPaddle, GrabPaddle, SpeedBall, ThruBall
 from gg import Scene
 from gg.utils import Pos, Vel
+
+from .alien import Alien
+from .background import DiscoBg
+from .ball import Ball
+from .bricks import GlassBrick, RainbowBrick, Brick
+from .bullet import PaddleBullet, AlienBullet
+from .paddle import Paddle
+from .powerup import LongPaddle, ShortPaddle, ShootPaddle, GrabPaddle, SpeedBall, ThruBall
 
 
 class Level(Scene):
@@ -88,18 +88,6 @@ class Level(Scene):
                 Ball(self, pos=ball_pos, vel=Vel([0, 0]))
             )
             self.add(*self.balls)
-
-    # def generate_bricks(self):
-    #     for it in range(7):
-    #         self.bricks.append(
-    #             RainbowBrick(self, pos=Pos([2, 4 + it * RainbowBrick.SHAPE[1]]))
-    #         )
-    #     for it in range(7):
-    #         self.bricks.append(
-    #             GlassBrick(self, pos=Pos(
-    #                 [2 + 1 * GlassBrick.SHAPE[0], 4 + it * GlassBrick.SHAPE[1]]
-    #             ))
-    #         )
 
     def receive_input(self, char):
         if char in ['j', 'l']:
@@ -209,7 +197,7 @@ class AlienLevel(Level):
     def __init__(self, *args, **kwargs):
         super(AlienLevel, self).__init__(*args, **kwargs)
         # print(self.paddle.pos)
-        self.alien = Alien(self, pos=Pos([0,(self.width // 4) * 2 - 2]))
+        self.alien = Alien(self, pos=Pos([0, (self.width // 4) * 2 - 2]))
         self.add(self.alien)
 
     def generate_bricks(self):

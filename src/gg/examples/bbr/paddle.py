@@ -1,6 +1,7 @@
 from gg import Sprite
 from gg import StatefulMixin
 from gg.utils import load_sprites, collides
+
 from .powerup import PaddlePowerUp, BallPowerUp
 from .sprites import paddle
 
@@ -93,8 +94,6 @@ class Paddle(StatefulMixin, Sprite):
     def reset_shoot(self, timestamp):
         self.update_state({'shooting': False, 'color': 0, 'shoot_time': timestamp})
         self.update_sprite()
-
-    # def enable_powerup(self):
 
     def update(self, timestamp):
         if self.state['shooting']:

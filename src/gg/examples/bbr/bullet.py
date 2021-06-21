@@ -1,6 +1,7 @@
-from bbr.sprites import bullet
 from gg import MovingMixin, Sprite
 from gg.utils import load_sprite, Vel
+
+from .sprites import bullet
 
 
 class Bullet(MovingMixin, Sprite):

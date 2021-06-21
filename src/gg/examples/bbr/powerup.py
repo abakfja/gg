@@ -1,6 +1,7 @@
-from bbr.ball import BoxedMovingMixin
 from gg import Sprite
 from gg.utils import load_sprite, Vel
+
+from .ball import BoxedMovingMixin
 from .sprites import powerup
 
 

@@ -38,5 +38,3 @@ class Entity(Renderable, Updatable):
 
     def is_active(self):
         return self._active
-
-

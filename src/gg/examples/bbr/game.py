@@ -1,9 +1,9 @@
 from time import perf_counter
 
 import numpy as np
-
 from gg import ForegroundColor, BackgroundColor
 from gg import Game
+
 from .level import Level1, Level2, AlienLevel
 from .splash_screen import SplashScreen
 

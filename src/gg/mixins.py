@@ -1,5 +1,5 @@
-import numpy as np
 from .utils import Vel
+
 
 # python Mixin
 class MovingMixin:
@@ -11,7 +11,7 @@ class MovingMixin:
 
     def __init__(self, *args, **kwargs):
         super(MovingMixin, self).__init__(*args, **kwargs)
-        self.vel = kwargs.get('vel', Vel([0,0]))
+        self.vel = kwargs.get('vel', Vel([0, 0]))
 
     @property
     def vx(self):
@@ -26,4 +26,3 @@ class MovingMixin:
 
     def add_vel(self, vel):
         self.vel += vel
-
