@@ -4,8 +4,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="gglib", 
-    version="0.0.4",
+    name="gg-lib", 
+    version="0.0.2",
     author="Kannav Mehta",
     author_email="kmkannavkmehta@gmail.com",
     description="A framework for creating terminal based games in python",
